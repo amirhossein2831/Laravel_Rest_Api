@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CustomerExistRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreInvoiceRequest extends FormRequest
 {
@@ -11,9 +13,9 @@ class StoreInvoiceRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +23,25 @@ class StoreInvoiceRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'customerId' => ['required', new CustomerExistRule()],
+            'amount' => 'required|numeric|min:100',
+            'status' => ['required', Rule::in('P', 'p', 'V', 'v', 'B', 'b')],
+            'billedDate' => 'required|date_format:Y-m-d H:i:s',
+            'paidDate' => 'nullable|date_format:Y-m-d H:i:s'
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(
+            [
+                'customer_id' => $this->customerId,
+                'billed_date' => $this->billedDate,
+                'paid_date' => $this->paidDate
+            ]
+        );
     }
 }
