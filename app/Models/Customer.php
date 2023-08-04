@@ -22,4 +22,11 @@ class Customer extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($customer) {
+            $customer->invoices()->delete();
+        });
+    }
 }
