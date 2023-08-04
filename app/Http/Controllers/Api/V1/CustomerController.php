@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -78,6 +79,11 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        $user = Auth::user();
+        $can = !is_null($user) && $user->tokenCan('delete');
+        if (!$can) {
+            return response()->json(['massage'=>'This action is unauthorized.']);
+        }
         $customer->delete();
         return \response()->json(['massage'=>'deleted successfully']);
     }
