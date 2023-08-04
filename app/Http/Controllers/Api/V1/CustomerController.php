@@ -24,6 +24,10 @@ class CustomerController extends Controller
         $filter = new CustomerFilter();
         $filterItem = $filter->transform($request);
         $customers = Customer::where($filterItem);
+        $includeInvoice = $request->query('includeInvoices');
+
+        $customers = $includeInvoice ? $customers->with("invoices") : $customers;
+
         return CustomerResource::collection($customers->paginate(25)->appends($request->query()));
     }
 
@@ -35,6 +39,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        $includeInvoice = \request()->query('includeInvoices');
+        $customer = $includeInvoice ? $customer->loadMissing("invoices") : $customer;
+
         return CustomerResource::make($customer);
     }
 
