@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('invoice', InvoiceController::class);
+    Route::post('invoice/bulk',[InvoiceController::class,'bulkStore']);
 });

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filter\V1\InvoiceFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkStoreRequest;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Http\Resources\V1\InvoiceResource;
 use App\Models\Invoice;
+use Arr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -50,6 +52,15 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         return Invoice::create($request->all());
+    }
+
+    public function bulkStore(BulkStoreRequest $request)
+    {
+        $bulk = collect($request->all())->map(function ($arr,$value){
+            return Arr::except($arr,['customerId','billedDate','paidDate']);
+        });
+        Invoice::insert($bulk->toArray());
+        return \response()->json(['message'=>'success fully insert']);
     }
 
     /**
