@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Auth;
 use Hash;
+use function response;
 
 class GenerateToken extends Controller
 {
@@ -29,11 +30,11 @@ class GenerateToken extends Controller
             $updateToken = $user->createToken('update-token', ['create', 'update']);
             $baseToken = $user->createToken('base-token', ['none']);
 
-            return [
+            return response()->json([
                 'adminToken' => $adminToken->plainTextToken,
                 'updateToken' => $updateToken->plainTextToken,
                 'baseToken' => $baseToken->plainTextToken
-            ];
+            ]);
         }
 
     }

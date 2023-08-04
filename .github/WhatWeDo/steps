@@ -3,4 +3,5 @@
 3_filter the date
 4_implement PostMethod
 5_implement Put,Update,Delete methods
+6_bulkInsert
 6_Generate token and authorize
