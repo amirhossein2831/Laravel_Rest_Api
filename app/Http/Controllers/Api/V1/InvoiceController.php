@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
+use App\Http\Resources\V1\InvoiceResource;
 use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class InvoiceController extends Controller
@@ -14,12 +16,13 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        return Invoice::all();
+        return InvoiceResource::collection(Invoice::all());
     }
+
     /**
      * Display the specified resource.
      *
@@ -28,7 +31,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        return $invoice;
+        return InvoiceResource::make($invoice);
     }
 
     /**
@@ -44,14 +47,13 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreInvoiceRequest  $request
+     * @param \App\Http\Requests\StoreInvoiceRequest $request
      * @return Response
      */
     public function store(StoreInvoiceRequest $request)
     {
         //
     }
-
 
 
     /**
@@ -68,7 +70,7 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateInvoiceRequest  $request
+     * @param \App\Http\Requests\UpdateInvoiceRequest $request
      * @param Invoice $invoice
      * @return Response
      */
