@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Filter\V1\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Http\Resources\V1\InvoiceResource;
 use App\Models\Invoice;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -18,9 +19,13 @@ class InvoiceController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return InvoiceResource::collection(Invoice::all());
+        $filter = new InvoiceFilter();
+        $filterItem = $filter->transform($request);
+        $invoices = Invoice::where($filterItem);
+        return InvoiceResource::collection($invoices->paginate(25)->appends($request->query));
+
     }
 
     /**

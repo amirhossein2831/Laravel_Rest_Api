@@ -2,7 +2,9 @@
 
 namespace App\Filter\V1;
 
-class InvoiceFilter
+use App\Filter\ApiFilter;
+
+class InvoiceFilter extends ApiFilter
 {
 
     protected array $safeParam  =[
