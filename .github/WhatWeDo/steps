@@ -1,0 +1,6 @@
+1_create Models,migration,factory and seeder
+2_implement controller,getMethod and resources
+3_filter the date
+4_implement PostMethod
+5_implement Put,Update,Delete methods
+6_Generate token and authorize
