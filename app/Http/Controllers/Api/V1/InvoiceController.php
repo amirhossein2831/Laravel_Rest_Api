@@ -8,6 +8,7 @@ use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Http\Resources\V1\InvoiceResource;
 use App\Models\Invoice;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -51,28 +52,17 @@ class InvoiceController extends Controller
         return Invoice::create($request->all());
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Invoice $invoice
-     * @return Response
-     */
-    public function edit(Invoice $invoice)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateInvoiceRequest $request
+     * @param UpdateInvoiceRequest $request
      * @param Invoice $invoice
-     * @return Response
+     * @return JsonResponse
      */
     public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
-        //
+        $invoice->update($request->all());
+        return \response()->json(['massage'=> 'updated successfully']);
     }
 
     /**
