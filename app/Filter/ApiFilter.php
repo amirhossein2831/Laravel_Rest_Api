@@ -8,7 +8,7 @@ class ApiFilter
 {
     protected array $safeParam = [];
     protected array $columnMap = [];
-    protected array $opraitorMap = [
+    protected array $operatorMap = [
         'gt' => '>',
         'lt' => '<',
         'eq' => '=',
@@ -25,7 +25,7 @@ class ApiFilter
             }
             foreach ($operators as $operator) {
                 if (isset($query[$operator])) {
-                    $whereClause[] = [$column, $this->opraitorMap[$operator], $query[$operator]];
+                    $whereClause[] = [$column, $this->operatorMap[$operator], $query[$operator]];
                 }
             }
         }
