@@ -69,10 +69,11 @@ class InvoiceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Invoice $invoice
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->delete();
+        return \response()->json(['massage'=>'deleted successfully']);
     }
 }
