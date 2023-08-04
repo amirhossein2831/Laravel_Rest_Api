@@ -24,7 +24,7 @@ class InvoiceController extends Controller
         $filter = new InvoiceFilter();
         $filterItem = $filter->transform($request);
         $invoices = Invoice::where($filterItem);
-        return InvoiceResource::collection($invoices->paginate(25)->appends($request->query));
+        return InvoiceResource::collection($invoices->paginate(25)->appends($request->query()));
 
     }
 
@@ -39,25 +39,16 @@ class InvoiceController extends Controller
         return InvoiceResource::make($invoice);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StoreInvoiceRequest $request
-     * @return Response
+     * @param StoreInvoiceRequest $request
+     * @return void
      */
     public function store(StoreInvoiceRequest $request)
     {
-        //
+        return Invoice::create($request->all());
     }
 
 
