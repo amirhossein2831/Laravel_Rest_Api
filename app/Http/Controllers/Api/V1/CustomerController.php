@@ -74,10 +74,11 @@ class CustomerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Customer $customer
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return \response()->json(['massage'=>'deleted successfully']);
     }
 }
