@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Filter\V1\CustomerFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\V1\CustomerResource;
 use App\Models\Customer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -17,9 +19,12 @@ class CustomerController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return CustomerResource::collection(Customer::all());
+        $filter = new CustomerFilter();
+        $filterItem = $filter->transform($request);
+        $customers = Customer::where($filterItem);
+        return CustomerResource::collection($customers->paginate(25)->appends($request->query()));
     }
 
     /**
