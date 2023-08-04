@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -84,7 +85,12 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
+        $user = Auth::user();
+        $can = !is_null($user) && $user->tokenCan('delete');
+        if (!$can) {
+            return response()->json(['massage'=>'This action is unauthorized.']);
+        }
         $invoice->delete();
-        return \response()->json(['massage'=>'deleted successfully']);
+        return response()->json(['massage'=>'deleted successfully.']);
     }
 }
