@@ -18,6 +18,7 @@ class CustomerResource extends JsonResource
     public function toArray($request): array|JsonSerializable|Arrayable
     {
         return [
+            'id'=>$this->id,
             'name'=>$this->name,
             'type' =>$this->type,
             'email'=>$this->email,
