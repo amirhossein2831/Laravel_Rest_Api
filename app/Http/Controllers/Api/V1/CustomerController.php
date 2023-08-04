@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\V1\CustomerResource;
 use App\Models\Customer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -56,28 +57,17 @@ class CustomerController extends Controller
         return Customer::create($request->all());
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Customer $customer
-     * @return Response
-     */
-    public function edit(Customer $customer)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateCustomerRequest $request
+     * @param UpdateCustomerRequest $request
      * @param Customer $customer
-     * @return Response
+     * @return JsonResponse
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $customer->update($request->all());
+        return \response()->json(['massage' => 'update successfully']);
     }
 
     /**
