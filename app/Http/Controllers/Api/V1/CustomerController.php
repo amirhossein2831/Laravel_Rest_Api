@@ -8,14 +8,22 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\V1\CustomerResource;
 use App\Models\Customer;
+use App\Providers\Servise\CustomerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use function response;
 
 class CustomerController extends Controller
 {
+    protected CustomerService $service;
+
+    public function __construct(CustomerService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,10 +33,11 @@ class CustomerController extends Controller
     {
         $filter = new CustomerFilter();
         $filterItem = $filter->transform($request);
-        $customers = Customer::where($filterItem);
-        $includeInvoice = $request->query('includeInvoices');
 
-        $customers = $includeInvoice ? $customers->with("invoices") : $customers;
+        $customers = $this->service->getAll($filterItem);
+        $customers = $request->query('includeInvoices') ?
+            $this->service->applyRelation($customers, ['invoices']) :
+            $customers;
 
         return CustomerResource::collection($customers->paginate(25)->appends($request->query()));
     }
@@ -41,8 +50,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $includeInvoice = \request()->query('includeInvoices');
-        $customer = $includeInvoice ? $customer->loadMissing("invoices") : $customer;
+        $customer = request()->query('includeInvoices') ?
+            $customer->loadMissing("invoices") :
+            $customer;
 
         return CustomerResource::make($customer);
     }
@@ -68,7 +78,7 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         $customer->update($request->all());
-        return \response()->json(['massage' => 'update successfully']);
+        return response()->json(['massage' => 'update successfully']);
     }
 
     /**
@@ -82,9 +92,9 @@ class CustomerController extends Controller
         $user = Auth::user();
         $can = !is_null($user) && $user->tokenCan('delete');
         if (!$can) {
-            return response()->json(['massage'=>'This action is unauthorized.']);
+            return response()->json(['massage' => 'This action is unauthorized.']);
         }
         $customer->delete();
-        return \response()->json(['massage'=>'deleted successfully']);
+        return response()->json(['massage' => 'deleted successfully']);
     }
 }
