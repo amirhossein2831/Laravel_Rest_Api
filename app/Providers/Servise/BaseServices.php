@@ -2,8 +2,6 @@
 
 namespace App\Providers\Servise;
 
-use App\Filter\V1\CustomerFilter;
-use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,12 +18,21 @@ abstract class BaseServices
         return $this->getModel()::where($filter);
     }
 
+    /**
+     * @param Builder $entity
+     * @param array $relation
+     * @return Builder
+     */
     public function applyRelation(Builder $entity, array $relation): Builder
     {
         return $entity->with($relation);
     }
 
-    public function getById(int $id)
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getById(int $id): mixed
     {
         return $this->getModel()::find($id);
     }
