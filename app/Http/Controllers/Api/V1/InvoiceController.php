@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Filter\V1\InvoiceFilter;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BulkStoreRequest;
-use App\Http\Requests\StoreInvoiceRequest;
-use App\Http\Requests\UpdateInvoiceRequest;
-use App\Http\Resources\V1\InvoiceResource;
-use App\Models\Invoice;
-use Arr;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
+use App\Http\Requests\UpdateInvoiceRequest;
+use App\Http\Requests\StoreInvoiceRequest;
+use App\Http\Resources\V1\InvoiceResource;
+use App\Providers\Servise\InvoiceService;
+use App\Http\Requests\BulkStoreRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use App\Filter\V1\InvoiceFilter;
+use Illuminate\Http\Request;
+use App\Models\Invoice;
+use function response;
+use Arr;
 
 class InvoiceController extends Controller
 {
+    protected InvoiceService $service;
+    public function __construct(InvoiceService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +34,9 @@ class InvoiceController extends Controller
     {
         $filter = new InvoiceFilter();
         $filterItem = $filter->transform($request);
-        $invoices = Invoice::where($filterItem);
+
+        $invoices = $this->service->getAll($filterItem);
+
         return InvoiceResource::collection($invoices->paginate(25)->appends($request->query()));
 
     }
@@ -61,7 +70,7 @@ class InvoiceController extends Controller
             return Arr::except($arr,['customerId','billedDate','paidDate']);
         });
         Invoice::insert($bulk->toArray());
-        return \response()->json(['message'=>'success fully insert']);
+        return response()->json(['message'=>'success fully insert']);
     }
 
     /**
@@ -74,7 +83,7 @@ class InvoiceController extends Controller
     public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
         $invoice->update($request->all());
-        return \response()->json(['massage'=> 'updated successfully']);
+        return response()->json(['massage'=> 'updated successfully']);
     }
 
     /**
