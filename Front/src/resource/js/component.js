@@ -9,7 +9,7 @@ export function tableRecord(customer,i){
       <td>${customer.type}</td>
       <td>${customer.postalCode}</td>
        <td>
-            <a class="btn" href='#${customer.id}'><i class="fas fa-eye text-info"></i></a>
+            <a class="btn" href='#show:${customer.id}'><i class="fas fa-eye text-info"></i></a>
             <button class="btn"><i class="fas fa-edit text-success"></i></button>
             <button class="btn"><i class="fas fa-trash text-danger"></i></button>
         </td>
