@@ -15,3 +15,22 @@ export function tableRecord(customer,i){
         </td>
     `;
 }
+
+export function userInfo() {
+    return `
+     <h1 class="mt-4">Customer Information</h1>
+        <div class="col-6 ps-4">
+            <span class="d-block">Name: sjj</span>
+            <span class="d-block">Email:</span>
+            <span class="d-block">Type:</span>
+            <span class="d-block">PostalCode:</span>
+        </div>
+        <div class="col-6">
+            <span class="d-block">Address:</span>
+            <span class="d-block">City:</span>
+            <span class="d-block">State:</span>
+        </div>
+
+    `;
+}
+
