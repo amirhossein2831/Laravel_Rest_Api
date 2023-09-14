@@ -34,3 +34,25 @@ export function userInfo() {
     `;
 }
 
+export function invoice() {
+    return `
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    Accordion Item #1
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                        <span class="d-block my-2">Name:</span>
+                        <span class="d-block my-2">Amount:</span>
+                        <span class="d-block my-2">Status:</span>
+                        <span class="d-block my-2">billedDate:</span>
+                        <span class="d-block my-2">PaidDate:</span>
+                        <span class="d-block my-2">InvoiceId:</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
