@@ -15,22 +15,27 @@ function loadContentBasedOnHash() {
     const id = parts[1];
     console.log(method)
     if (method && method === '#show') {
+        fetchCustomer(id).then(data =>{
+            console.log(data)
+            let res = '';
+            data.data.invoices.forEach(function (i){
+              res += invoice(i.id,i.amount,i.status,i.billedDate,i.paidDate) + '\n';
+            })
             document.getElementById('body').innerHTML=`
             <div class="container">
                  <div class="row border border-4 border-info rounded-3 mt-5" style="font-size: 25px">
-                 ${userInfo()}
+                 ${userInfo(data.data)}
                </div>
             </div>
             <div class="container">
                 <div class="row border border-4 border-info rounded-3 mt-3" style="font-size: 25px">
                     <h1 class="mt-2">Customer Invoices</h1>
                     <div class="accordion" id="accordionExample">
-                    ${invoice()}
-                    ${invoice()}
-                    ${invoice()}
+                    ${res}
                     </div>
                 </div>
             </div>`;
+        })
     }
 }
 function restoreState() {
@@ -62,3 +67,16 @@ function handlePopState(event) {
     }
 }
 
+function fetchCustomer(id) {
+    return fetch('http://localhost:8000/api/v1/customers/' + id +'?includeInvoices=true')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
